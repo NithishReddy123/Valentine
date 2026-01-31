@@ -5,51 +5,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Valentine ❤️</title>
     <style>
-        body { font-family: sans-serif; background-color: #ffe6e6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { text-align: center; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 85%; max-width: 400px; }
-        h1 { color: #ff4d4d; font-size: 2rem; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(116.82deg, #ff9a9e 0%, #fecfef 100%);
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden; 
+        }
+        
+        .music-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 100;
+        }
+
+        .container { 
+            text-align: center; 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            width: 85%; 
+            max-width: 400px; 
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        h1 { 
+            color: #ff4d4d; 
+            font-size: 2rem; 
+            min-height: 2.4rem; /* Keeps space for typing effect */
+        }
+        
         p { color: #666; font-size: 1.1rem; }
-        img { width: 100%; max-width: 180px; border-radius: 10px; margin-bottom: 15px; }
-        .btn-group { margin-top: 20px; height: 50px; position: relative; }
-        button { padding: 10px 25px; font-size: 1rem; border: none; border-radius: 50px; cursor: pointer; }
-        .yes-btn { background-color: #ff4d4d; color: white; margin-right: 10px; }
-        .no-btn { background-color: #e0e0e0; color: #333; position: absolute; }
+        
+        img { 
+            width: 100%; 
+            max-width: 180px; 
+            border-radius: 15px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-group { margin-top: 25px; height: 60px; position: relative; }
+        
+        button { 
+            padding: 12px 30px; 
+            font-size: 1.1rem; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .yes-btn { 
+            background-color: #ff4d4d; 
+            color: white; 
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+        }
+        
+        .yes-btn:hover { transform: scale(1.05); }
+
+        .no-btn { 
+            background-color: #fff; 
+            color: #ff4d4d; 
+            border: 2px solid #ff4d4d;
+            position: absolute; 
+            left: 50%;
+            transform: translateX(-50%); /* Centers the button initially */
+        }
+        
         .success-message { display: none; }
+
+        /* Typing cursor animation */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="container" id="main-card">
+
+    <div class="music-control" onclick="toggleMusic()">🎵</div>
+    
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="container">
         <div id="question-box">
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmZlZGRjM2Q2NTc0NTQ1M2Y2NTM5YzE1N2Y4MzE2ZDM3ZDY4NjM2ZSZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PXM/cLS1cfxvGOPVpf9wXM/giphy.gif">
-            <h1>Will you be my Valentine?</h1>
+            <h1 id="typewriter" class="typing-cursor"></h1>
             <p>I promise to buy you chocolates! 🍫</p>
             <div class="btn-group">
                 <button class="yes-btn" onclick="acceptProposal()">YES!</button>
                 <button class="no-btn" id="noBtn" ontouchstart="moveButton()" onmouseover="moveButton()">No</button>
             </div>
         </div>
+
         <div class="success-message" id="success-box">
             <img src="https://media.giphy.com/media/T86i6yDyOYz7J6dPhf/giphy.gif">
             <h1>YAY! ❤️</h1>
-            <p>Best date ever! See you on the 14th!</p>
+            <p>I knew you would say yes! <br> See you on the 14th!</p>
         </div>
     </div>
+
     <script>
         const noBtn = document.getElementById('noBtn');
         const questionBox = document.getElementById('question-box');
         const successBox = document.getElementById('success-box');
-        function moveButton() {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+        const typewriterElement = document.getElementById('typewriter');
+        const audio = document.getElementById('bgMusic');
+
+        // Typing Effect Logic
+        const text = "Will you be my Valentine?";
+        let index = 0;
+
+        function typeWriter() {
+            if (index < text.length) {
+                typewriterElement.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeWriter, 100); // Speed of typing
+            } else {
+                typewriterElement.classList.remove('typing-cursor'); // Stop blinking cursor
+            }
         }
+        
+        // Start typing when page loads
+        window.onload = typeWriter;
+
+        // Smart No Button Logic
+        const phrases = ["Really?", "Think again!", "So mean!", "Try again!", "Please?", "Last chance!"];
+        
+        function moveButton() {
+            // Calculate random position
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+            
+            // Change text randomly
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            noBtn.innerText = randomPhrase;
+        }
+
         function acceptProposal() {
             questionBox.style.display = 'none';
             successBox.style.display = 'block';
+            confettiEffect();
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        // Simple confetti for celebration
+        function confettiEffect() {
+            const colors = ['#ff4d4d', '#ff9a9e', '#ffffff'];
+            for(let i=0; i<30; i++) {
+                let div = document.createElement('div');
+                div.style.position = 'fixed';
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.top = '-10px';
+                div.style.width = '10px';
+                div.style.height = '10px';
+                div.style.backgroundColor = colors[Math.floor(Math.random() * 3)];
+                div.style.animation = 'fall 3s linear forwards';
+                document.body.appendChild(div);
+            }
+            
+            // Add style for confetti
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }`;
+            document.head.appendChild(style);
         }
     </script>
 </body>
 </html>
-
