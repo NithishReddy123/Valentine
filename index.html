@@ -21,7 +21,7 @@
             min-height: 100vh; 
             margin: 0; 
             overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent; /* Removes blue tap box on mobile */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* --- STAGE 1: GIFT BOX --- */
@@ -55,13 +55,11 @@
         }
         .yes-btn { background-color: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255,77,77,0.3); z-index: 10; }
         
-        /* Fixed No Button Logic */
         .no-btn { 
             background-color: #fff; color: var(--primary); 
             border: 2px solid var(--primary); 
-            position: absolute; /* Allows movement */
-            z-index: 100; /* Stays on top */
-            left: 50%; top: 0; transform: translateX(-50%); /* Start center */
+            position: absolute; z-index: 100;
+            left: 50%; top: 0; transform: translateX(-50%);
         }
 
         /* --- STAGE 3: TIMELINE --- */
@@ -91,10 +89,9 @@
         .reveal-card.revealed .reveal-content { filter: blur(0); opacity: 1; }
         .reveal-card.revealed .reveal-overlay { display: none; }
 
-        /* IMAGES FIX */
         .card-img { 
-            width: 120px; height: 120px; 
-            border-radius: 15px; /* Square with rounded corners looks better for posters */
+            width: 120px; height: 160px; /* Taller for movie poster */
+            border-radius: 10px;
             object-fit: cover; margin: 10px auto; display: block; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -141,7 +138,7 @@
             <div class="reveal-overlay"><span>Tap to Reveal Dinner</span></div>
             <div class="reveal-content">
                 <h3>Unlimited Dinner 🥟</h3>
-                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/640px-Momo_nepal.jpg">
+                <img class="card-img" style="height: 120px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/640px-Momo_nepal.jpg">
                 <p>Only the best <b>MOMOS</b> for you!</p>
             </div>
         </div>
@@ -150,7 +147,7 @@
             <div class="reveal-overlay"><span>Tap to Reveal Movie</span></div>
             <div class="reveal-content">
                 <h3>Movie Night 🎬</h3>
-                <img class="card-img" src="https://m.media-amazon.com/images/M/MV5BNjk4OTM5YTctMTI1MC00MzM1LWFlNzctZTI2ZjY3ZTVkMGY2XkEyXkFqcGdeQXVyMTI1NDEyNTM5._V1_.jpg" style="object-position: top;">
+                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/9/90/Billa_2009_poster.jpg">
                 <p>Watching <b>BILLA</b> together! 😎</p>
             </div>
         </div>
@@ -173,24 +170,18 @@
     <script>
         const audio = document.getElementById('bgMusic');
         
-        // --- LOGIC ---
         function openGift() {
-            // AUDIO FIX: Attempt to play immediately on first interaction
-            audio.volume = 0.5; // Set volume to 50%
+            audio.volume = 0.5;
             audio.play().then(() => {
                 document.querySelector('.music-control').innerHTML = '🔊';
-            }).catch(error => {
-                console.log("Audio autoplay failed:", error);
-            });
+            }).catch(error => { console.log("Audio autoplay failed:", error); });
 
             document.getElementById('gift-screen').style.display = 'none';
             document.getElementById('proposal-screen').style.display = 'block';
             typeWriter();
         }
 
-        function reveal(card) {
-            card.classList.add('revealed');
-        }
+        function reveal(card) { card.classList.add('revealed'); }
 
         function acceptProposal() {
             document.getElementById('proposal-screen').style.display = 'none';
@@ -199,7 +190,6 @@
             launchConfetti();
         }
 
-        // --- TYPEWRITER ---
         const text = "Will you be my Valentine, Pilla Kothi? 🐒";
         const typeWriterElement = document.getElementById('typewriter');
         let index = 0;
@@ -209,43 +199,27 @@
                 typeWriterElement.innerHTML += text.charAt(index);
                 index++;
                 setTimeout(typeWriter, 80);
-            } else {
-                typeWriterElement.classList.remove('typing-cursor');
-            }
+            } else { typeWriterElement.classList.remove('typing-cursor'); }
         }
 
-        // --- FIXED NO BUTTON LOGIC ---
         const noBtn = document.getElementById('noBtn');
         const phrases = ["Really?", "Pilla Kothi please!", "Don't be mean!", "Just click YES!", "I'll cry!", "Look at the monkey!"];
         
         function moveButton(e) {
-            // Prevent default behavior (zooming/scrolling on tap)
             if(e) e.preventDefault();
-            
-            // 1. Change Text FIRST
             const randomText = phrases[Math.floor(Math.random() * phrases.length)];
             noBtn.innerText = randomText;
             
-            // 2. Move Button
-            // Calculate available space
             const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
             const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
-            
-            // Generate random coordinates
             const randomX = Math.max(10, Math.random() * maxWidth);
             const randomY = Math.max(10, Math.random() * maxHeight);
             
-            // Apply new position
-            noBtn.style.position = 'fixed'; // Ensure it breaks out of layout
+            noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
-            
-            // 3. Style Change (Optional visual feedback)
-            noBtn.style.backgroundColor = "#ffe6e6";
-            noBtn.style.borderColor = "#ff4d4d";
         }
 
-        // --- MUSIC TOGGLE ---
         function toggleMusic() {
             if (audio.paused) {
                 audio.play();
@@ -256,7 +230,6 @@
             }
         }
 
-        // --- CONFETTI ---
         function launchConfetti() {
             for(let i=0; i<50; i++) {
                 let div = document.createElement('div');
