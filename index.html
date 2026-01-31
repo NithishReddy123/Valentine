@@ -3,57 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Pilla Kothi 🐒</title>
+    <title>For Pilla Kothi 🐒</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #ff4d4d;
             --secondary: #ff9a9e;
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --bg-color: #ffe6e6;
         }
         
         body { 
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(135deg, #ffe6e6 0%, #ffc3a0 100%);
+            background-color: var(--bg-color);
             display: flex; 
             flex-direction: column;
             align-items: center; 
+            justify-content: center;
             min-height: 100vh; 
             margin: 0; 
             overflow-x: hidden;
-            transition: background 1s ease;
+            transition: background 0.5s;
         }
 
-        /* Music Button */
-        .music-control {
-            position: fixed; top: 15px; right: 15px;
-            background: white; padding: 10px; 
-            border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            z-index: 1000; cursor: pointer; font-size: 20px;
+        /* --- STAGE 1: GIFT BOX --- */
+        #gift-screen { cursor: pointer; text-align: center; }
+        .gift-box {
+            font-size: 80px;
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes bounce { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-20px); } 
+        }
+        .tap-text {
+            margin-top: 10px; color: var(--primary); 
+            animation: pulse 1s infinite;
         }
 
-        /* Container Styles */
+        /* --- STAGE 2: PROPOSAL --- */
         .container { 
+            display: none; /* Hidden initially */
             text-align: center; 
             background: rgba(255, 255, 255, 0.95); 
             padding: 30px; 
             border-radius: 25px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
             width: 85%; max-width: 350px; 
-            margin-top: 10vh;
-            position: relative;
-            z-index: 10;
+            position: relative; z-index: 10;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
+        img.main-gif { width: 100%; max-width: 200px; border-radius: 15px; }
         h1 { color: var(--primary); font-size: 1.8rem; margin: 10px 0; }
         p { color: #666; font-size: 1.1rem; }
-        
-        img.main-gif { 
-            width: 100%; max-width: 200px; height: auto;
-            border-radius: 15px;
-        }
 
-        /* Buttons */
         .btn-group { margin-top: 20px; height: 50px; position: relative; }
         button { 
             padding: 12px 25px; font-size: 1rem; border: none; 
@@ -63,59 +67,68 @@
         .yes-btn { background-color: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255,77,77,0.3); }
         .no-btn { background-color: #fff; color: var(--primary); border: 2px solid var(--primary); position: absolute; }
 
-        /* Timeline Section */
-        #timeline-section {
-            display: none;
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            padding-bottom: 80px;
+        /* --- STAGE 3: TIMELINE --- */
+        #timeline-screen {
+            display: none; width: 100%; max-width: 500px;
+            padding: 20px; padding-bottom: 100px;
+        }
+        .section-title {
+            text-align: center; color: var(--primary); font-size: 2rem;
+            margin-bottom: 20px;
         }
 
-        .timeline-title {
-            text-align: center; color: #fff;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-            margin-bottom: 20px; font-size: 2rem;
+        /* Reveal Card Style */
+        .reveal-card {
+            background: white; margin-bottom: 20px; border-radius: 15px;
+            overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative; transition: transform 0.2s;
+        }
+        .reveal-card:active { transform: scale(0.98); }
+
+        .reveal-content {
+            padding: 20px; text-align: center;
+            filter: blur(15px); /* BLUR EFFECT */
+            opacity: 0.5;
+            transition: all 0.5s ease;
+        }
+        .reveal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column;
+            background: rgba(255,40,40,0.05);
+            z-index: 5;
+        }
+        .reveal-overlay span {
+            background: var(--primary); color: white;
+            padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;
+            pointer-events: none;
+        }
+        
+        /* State: REVEALED */
+        .reveal-card.revealed .reveal-content { filter: blur(0); opacity: 1; }
+        .reveal-card.revealed .reveal-overlay { display: none; }
+
+        .card-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 10px auto; display: block; }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: #25D366; color: white;
+            padding: 15px 30px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            text-decoration: none; font-weight: bold; z-index: 100;
+            animation: pulse 2s infinite;
         }
 
-        .event-card {
-            background: white; margin-bottom: 15px; padding: 15px;
-            border-radius: 15px; display: flex; align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            opacity: 0; transform: translateY(20px);
-            animation: slideIn 0.5s forwards;
-        }
-
-        .date-badge {
-            background: var(--secondary); color: white;
-            padding: 8px 12px; border-radius: 10px; font-size: 0.9rem;
-            margin-right: 15px; min-width: 60px; text-align: center;
-        }
-
-        .event-details h3 { margin: 0 0 5px 0; color: #333; font-size: 1.1rem; }
-        .event-details p { margin: 0; color: #777; font-size: 0.9rem; }
-
-        /* The Big Date Card */
-        .special-card {
-            background: linear-gradient(135deg, #fff0f0 0%, #ffd1d1 100%);
-            border: 2px solid var(--primary);
-            flex-direction: column; text-align: center;
-        }
-        .special-card img {
-            width: 100px; height: 100px; border-radius: 50%;
-            object-fit: cover; margin: 15px 0;
-            border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* Helpers */
+        /* UTILS */
+        .music-control { position: fixed; top: 15px; right: 15px; background: white; padding: 10px; border-radius: 50%; z-index: 1000; cursor: pointer; }
         .hidden { display: none !important; }
+        .floating-emoji { position: fixed; z-index: 100; cursor: pointer; user-select: none; }
+        
+        /* Typewriter Cursor */
         .typing-cursor::after { content: '|'; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-        @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
-        
-        /* Celebration Elements */
-        .floating-emoji { position: fixed; top: -10px; z-index: 0; animation: floatDown linear forwards; }
-        @keyframes floatDown { to { transform: translateY(105vh) rotate(360deg); } }
 
     </style>
 </head>
@@ -126,59 +139,79 @@
         <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Jazz_Sampler/Kevin_MacLeod_-_Enthusiast.mp3" type="audio/mp3">
     </audio>
 
-    <div class="container" id="question-card">
-        <img class="main-gif" src="https://media1.tenor.com/m/eD7hBwR4rWAAAAAC/monkey-flower.gif" alt="Monkey">
-        
+    <div id="gift-screen" onclick="openGift()">
+        <div class="gift-box">🎁</div>
+        <div class="tap-text">Tap to open for Pilla Kothi</div>
+    </div>
+
+    <div class="container" id="proposal-screen">
+        <img class="main-gif" src="https://media1.tenor.com/m/eD7hBwR4rWAAAAAC/monkey-flower.gif">
         <h1 id="typewriter" class="typing-cursor"></h1>
         <p>I promise to handle your mood swings! 🐒</p>
-        
         <div class="btn-group">
-            <button class="yes-btn" onclick="acceptProposal()">YES, I will!</button>
+            <button class="yes-btn" onclick="acceptProposal()">YES!</button>
             <button class="no-btn" id="noBtn" ontouchstart="moveButton(event)" onmouseover="moveButton(event)">No</button>
         </div>
     </div>
 
-    <div class="container hidden" id="success-card">
-        <img class="main-gif" src="https://media1.tenor.com/m/6aB-jLdI_w0AAAAC/monkey-dance.gif" alt="Happy Monkey">
-        <h1>YAY! ❤️</h1>
-        <p>You made me the happiest person, Pilla Kothi!</p>
-        <button class="yes-btn" onclick="showTimeline()">🎁 Click for Surprise</button>
-    </div>
-
-    <div id="timeline-section">
-        <h2 class="timeline-title">Our Valentine Plan ❤️</h2>
+    <div id="timeline-screen">
+        <h1 class="section-title">Tap cards to reveal! 👇</h1>
         
-        <div class="event-card" style="animation-delay: 0.1s">
-            <div class="date-badge">Feb 7-13</div>
-            <div class="event-details">
-                <h3>Valentine Week</h3>
-                <p>Roses, Teddies, Hugs & Kisses... all for you. 🌹🧸</p>
+        <div class="reveal-card" onclick="reveal(this)">
+            <div class="reveal-overlay"><span>Tap to Reveal Dinner</span></div>
+            <div class="reveal-content">
+                <h3>Unlimited Dinner 🥟</h3>
+                <img class="card-img" src="https://t4.ftcdn.net/jpg/02/40/07/28/360_F_240072870_MB6bY7Wz7cddb3tVf5eT0v5a7c5a7c5a.jpg">
+                <p>Only the best <b>MOMOS</b> for you!</p>
             </div>
         </div>
 
-        <div class="event-card special-card" style="animation-delay: 0.2s">
-            <div class="date-badge" style="width: 100%; background: #ff4d4d;">Feb 14 - THE BIG DATE</div>
-            
-            <img src="https://t4.ftcdn.net/jpg/02/40/07/28/360_F_240072870_MB6bY7Wz7cddb3tVf5eT0v5a7c5a7c5a.jpg" alt="Momos">
-            
-            <h3>Dinner Date 🥟</h3>
-            <p>Unlimited <b>MOMOS</b> for my Pilla Kothi!</p>
-            <hr style="width: 50%; opacity: 0.3; margin: 10px auto;">
-            
-            <h3>Movie Time 🎬</h3>
-            <p>Watching <b>BILLA</b> 😎</p>
-            <hr style="width: 50%; opacity: 0.3; margin: 10px auto;">
-
-            <p style="font-size: 0.9rem; color: #d32f2f; font-weight: bold;">
-                🎶 Ninnu vidisi vundalenaya <br> kailasa vaasa ❤️
-            </p>
+        <div class="reveal-card" onclick="reveal(this)">
+            <div class="reveal-overlay"><span>Tap to Reveal Movie</span></div>
+            <div class="reveal-content">
+                <h3>Movie Night 🎬</h3>
+                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/9/90/Billa_2009_poster.jpg/220px-Billa_2009_poster.jpg">
+                <p>Watching <b>BILLA</b> together! 😎</p>
+            </div>
         </div>
-        
-        <br><br>
+
+        <div class="reveal-card" onclick="reveal(this)">
+            <div class="reveal-overlay"><span>Tap to Reveal Song</span></div>
+            <div class="reveal-content">
+                <h3>Our Song 🎶</h3>
+                <p style="font-size: 1.2rem; color: #ff4d4d;">
+                    <i>"Ninnu vidisi vundalenaya <br> kailasa vaasa"</i>
+                </p>
+            </div>
+        </div>
+
+        <a href="https://wa.me/?text=Yes!%20I'm%20ready%20for%20Momos%20and%20Billa!%20%F0%9F%90%92%F0%9F%92%96" class="whatsapp-btn">
+            Send "YES" on WhatsApp 💬
+        </a>
     </div>
 
     <script>
-        // Typing Effect
+        // --- LOGIC ---
+        function openGift() {
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('proposal-screen').style.display = 'block';
+            typeWriter();
+            toggleMusic();
+        }
+
+        function reveal(card) {
+            card.classList.add('revealed');
+            createEmojiBurst(card);
+        }
+
+        function acceptProposal() {
+            document.getElementById('proposal-screen').style.display = 'none';
+            document.getElementById('timeline-screen').style.display = 'block';
+            document.body.style.backgroundColor = "#fff0f5"; // Lighter pink
+            launchConfetti();
+        }
+
+        // --- UTILS ---
         const text = "Will you be my Valentine, Pilla Kothi? 🐒";
         const typeWriterElement = document.getElementById('typewriter');
         let index = 0;
@@ -187,55 +220,18 @@
             if (index < text.length) {
                 typeWriterElement.innerHTML += text.charAt(index);
                 index++;
-                setTimeout(typeWriter, 100);
+                setTimeout(typeWriter, 80);
             } else {
                 typeWriterElement.classList.remove('typing-cursor');
             }
         }
-        window.onload = typeWriter;
 
-        // No Button Logic
         const noBtn = document.getElementById('noBtn');
-        const phrases = ["Really?", "Pilla Kothi please!", "Don't be mean!", "Just click YES!", "I'll cry!", "Look at the monkey!"];
-        
         function moveButton(e) {
             if(e && e.type === 'touchstart') e.preventDefault();
             noBtn.style.position = 'fixed';
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
-            noBtn.style.left = `${Math.max(10, x)}px`;
-            noBtn.style.top = `${Math.max(10, y)}px`;
-            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
-            noBtn.style.backgroundColor = "#ffe6e6";
-        }
-
-        // Navigation
-        function acceptProposal() {
-            document.getElementById('question-card').classList.add('hidden');
-            document.getElementById('success-card').classList.remove('hidden');
-            document.body.style.background = "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)";
-            launchCelebration();
-            toggleMusic();
-        }
-
-        function showTimeline() {
-            document.getElementById('success-card').classList.add('hidden');
-            document.getElementById('timeline-section').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Celebration Effects
-        function launchCelebration() {
-            const emojis = ['❤️', '🐒', '🥟', '🎬'];
-            for(let i=0; i<40; i++) {
-                let div = document.createElement('div');
-                div.className = 'floating-emoji';
-                div.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-                div.style.left = Math.random() * 100 + 'vw';
-                div.style.fontSize = Math.random() * 20 + 20 + 'px';
-                div.style.animationDuration = Math.random() * 3 + 2 + 's';
-                document.body.appendChild(div);
-            }
+            noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
         }
 
         const audio = document.getElementById('bgMusic');
@@ -246,6 +242,44 @@
             } else {
                 audio.pause();
                 document.querySelector('.music-control').innerHTML = '🎵';
+            }
+        }
+
+        function launchConfetti() {
+            for(let i=0; i<50; i++) {
+                let div = document.createElement('div');
+                div.className = 'floating-emoji';
+                div.innerHTML = ['❤️','🐒','🥟','🔥'][Math.floor(Math.random()*4)];
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.top = '-50px';
+                div.style.animation = `fall ${Math.random()*3+2}s linear forwards`;
+                div.onclick = function(){ this.remove() }; // Interactive popping
+                document.body.appendChild(div);
+            }
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }`;
+            document.head.appendChild(style);
+        }
+
+        function createEmojiBurst(element) {
+            // Mini burst when card is revealed
+            const rect = element.getBoundingClientRect();
+            for(let i=0; i<10; i++) {
+                let div = document.createElement('div');
+                div.innerText = '✨';
+                div.style.position = 'fixed';
+                div.style.left = rect.left + rect.width/2 + 'px';
+                div.style.top = rect.top + rect.height/2 + 'px';
+                div.style.fontSize = '20px';
+                div.style.pointerEvents = 'none';
+                div.style.transition = 'all 1s';
+                document.body.appendChild(div);
+                
+                setTimeout(() => {
+                    div.style.transform = `translate(${Math.random()*100-50}px, ${Math.random()*100-50}px)`;
+                    div.style.opacity = 0;
+                }, 10);
+                setTimeout(() => div.remove(), 1000);
             }
         }
     </script>
