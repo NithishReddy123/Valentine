@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Valentine ❤️</title>
+    <style>
+        body { font-family: sans-serif; background-color: #ffe6e6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .container { text-align: center; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 85%; max-width: 400px; }
+        h1 { color: #ff4d4d; font-size: 2rem; }
+        p { color: #666; font-size: 1.1rem; }
+        img { width: 100%; max-width: 180px; border-radius: 10px; margin-bottom: 15px; }
+        .btn-group { margin-top: 20px; height: 50px; position: relative; }
+        button { padding: 10px 25px; font-size: 1rem; border: none; border-radius: 50px; cursor: pointer; }
+        .yes-btn { background-color: #ff4d4d; color: white; margin-right: 10px; }
+        .no-btn { background-color: #e0e0e0; color: #333; position: absolute; }
+        .success-message { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-card">
+        <div id="question-box">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmZlZGRjM2Q2NTc0NTQ1M2Y2NTM5YzE1N2Y4MzE2ZDM3ZDY4NjM2ZSZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PXM/cLS1cfxvGOPVpf9wXM/giphy.gif">
+            <h1>Will you be my Valentine?</h1>
+            <p>I promise to buy you chocolates! 🍫</p>
+            <div class="btn-group">
+                <button class="yes-btn" onclick="acceptProposal()">YES!</button>
+                <button class="no-btn" id="noBtn" ontouchstart="moveButton()" onmouseover="moveButton()">No</button>
+            </div>
+        </div>
+        <div class="success-message" id="success-box">
+            <img src="https://media.giphy.com/media/T86i6yDyOYz7J6dPhf/giphy.gif">
+            <h1>YAY! ❤️</h1>
+            <p>Best date ever! See you on the 14th!</p>
+        </div>
+    </div>
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const questionBox = document.getElementById('question-box');
+        const successBox = document.getElementById('success-box');
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+        function acceptProposal() {
+            questionBox.style.display = 'none';
+            successBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
