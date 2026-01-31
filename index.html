@@ -6,76 +6,44 @@
     <title>For Pilla Kothi 🐒</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #ff4d4d;
-            --bg-color: #ffe6e6;
-        }
-        
+        :root { --primary: #ff4d4d; --bg-color: #ffe6e6; }
         body { 
-            font-family: 'Fredoka', sans-serif;
-            background-color: var(--bg-color);
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center;
-            min-height: 100vh; 
-            margin: 0; 
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Fredoka', sans-serif; background-color: var(--bg-color);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; margin: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
         }
-
-        /* --- STAGE 1: GIFT BOX --- */
+        /* STAGE 1 */
         #gift-screen { cursor: pointer; text-align: center; }
         .gift-box { font-size: 80px; animation: bounce 1.5s infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         .tap-text { margin-top: 10px; color: var(--primary); animation: pulse 1s infinite; }
-
-        /* --- STAGE 2: PROPOSAL --- */
+        /* STAGE 2 */
         .container { 
-            display: none; 
-            text-align: center; 
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 30px; border-radius: 25px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-            width: 85%; max-width: 350px; 
-            position: relative; z-index: 10;
+            display: none; text-align: center; background: rgba(255, 255, 255, 0.95); 
+            padding: 30px; border-radius: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+            width: 85%; max-width: 350px; position: relative; z-index: 10;
         }
-
         img.main-gif { width: 100%; max-width: 200px; border-radius: 15px; }
         h1 { color: var(--primary); font-size: 1.8rem; margin: 10px 0; }
         p { color: #666; font-size: 1.1rem; }
-
         .btn-group { margin-top: 20px; height: 60px; position: relative; }
-        
         button { 
-            padding: 12px 25px; font-size: 1rem; border: none; 
-            border-radius: 50px; cursor: pointer; font-weight: 600;
-            font-family: 'Fredoka', sans-serif;
-            transition: all 0.2s;
+            padding: 12px 25px; font-size: 1rem; border: none; border-radius: 50px; 
+            cursor: pointer; font-weight: 600; font-family: 'Fredoka', sans-serif;
         }
         .yes-btn { background-color: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255,77,77,0.3); z-index: 10; }
-        
         .no-btn { 
-            background-color: #fff; color: var(--primary); 
-            border: 2px solid var(--primary); 
-            position: absolute; z-index: 100;
-            left: 50%; top: 0; transform: translateX(-50%);
+            background-color: #fff; color: var(--primary); border: 2px solid var(--primary); 
+            position: absolute; z-index: 100; left: 50%; top: 0; transform: translateX(-50%);
         }
-
-        /* --- STAGE 3: TIMELINE --- */
+        /* STAGE 3 */
         #timeline-screen { display: none; width: 100%; max-width: 500px; padding: 20px; padding-bottom: 100px; }
         .section-title { text-align: center; color: var(--primary); font-size: 2rem; margin-bottom: 20px; }
-        
         .reveal-card {
             background: white; margin-bottom: 20px; border-radius: 15px;
-            overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative;
+            overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative;
         }
-
-        .reveal-content {
-            padding: 20px; text-align: center;
-            filter: blur(15px); opacity: 0.5; transition: all 0.5s ease;
-        }
+        .reveal-content { padding: 20px; text-align: center; filter: blur(15px); opacity: 0.5; transition: all 0.5s ease; }
         .reveal-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
@@ -85,33 +53,26 @@
             background: var(--primary); color: white; padding: 8px 15px;
             border-radius: 20px; font-size: 0.9rem; pointer-events: none;
         }
-        
         .reveal-card.revealed .reveal-content { filter: blur(0); opacity: 1; }
         .reveal-card.revealed .reveal-overlay { display: none; }
-
         .card-img { 
-            width: 120px; height: 160px; /* Taller for movie poster */
-            border-radius: 10px;
+            width: 120px; height: 150px; border-radius: 10px;
             object-fit: cover; margin: 10px auto; display: block; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-
         .whatsapp-btn {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background-color: #25D366; color: white; padding: 15px 30px;
             border-radius: 50px; display: flex; align-items: center; gap: 10px;
             box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; z-index: 100;
         }
-
         .music-control { position: fixed; top: 15px; right: 15px; background: white; padding: 10px; border-radius: 50%; z-index: 1000; cursor: pointer; }
         .typing-cursor::after { content: '|'; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-
     <div class="music-control" onclick="toggleMusic()">🎵</div>
-    
     <audio id="bgMusic" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mp3">
     </audio>
@@ -147,7 +108,7 @@
             <div class="reveal-overlay"><span>Tap to Reveal Movie</span></div>
             <div class="reveal-content">
                 <h3>Movie Night 🎬</h3>
-                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/9/90/Billa_2009_poster.jpg">
+                <img class="card-img" src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/thumbnail/xlarge/billa-et00002889-24-03-2017-17-31-09.jpg" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/9/90/Billa_2009_poster.jpg'">
                 <p>Watching <b>BILLA</b> together! 😎</p>
             </div>
         </div>
@@ -169,73 +130,46 @@
 
     <script>
         const audio = document.getElementById('bgMusic');
-        
         function openGift() {
             audio.volume = 0.5;
-            audio.play().then(() => {
-                document.querySelector('.music-control').innerHTML = '🔊';
-            }).catch(error => { console.log("Audio autoplay failed:", error); });
-
+            audio.play().then(() => { document.querySelector('.music-control').innerHTML = '🔊'; }).catch(e => console.log(e));
             document.getElementById('gift-screen').style.display = 'none';
             document.getElementById('proposal-screen').style.display = 'block';
             typeWriter();
         }
-
         function reveal(card) { card.classList.add('revealed'); }
-
         function acceptProposal() {
             document.getElementById('proposal-screen').style.display = 'none';
             document.getElementById('timeline-screen').style.display = 'block';
             document.body.style.backgroundColor = "#fff0f5"; 
             launchConfetti();
         }
-
         const text = "Will you be my Valentine, Pilla Kothi? 🐒";
         const typeWriterElement = document.getElementById('typewriter');
         let index = 0;
-
         function typeWriter() {
-            if (index < text.length) {
-                typeWriterElement.innerHTML += text.charAt(index);
-                index++;
-                setTimeout(typeWriter, 80);
-            } else { typeWriterElement.classList.remove('typing-cursor'); }
+            if (index < text.length) { typeWriterElement.innerHTML += text.charAt(index); index++; setTimeout(typeWriter, 80); } 
+            else { typeWriterElement.classList.remove('typing-cursor'); }
         }
-
         const noBtn = document.getElementById('noBtn');
         const phrases = ["Really?", "Pilla Kothi please!", "Don't be mean!", "Just click YES!", "I'll cry!", "Look at the monkey!"];
-        
         function moveButton(e) {
             if(e) e.preventDefault();
-            const randomText = phrases[Math.floor(Math.random() * phrases.length)];
-            noBtn.innerText = randomText;
-            
-            const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
-            const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
-            const randomX = Math.max(10, Math.random() * maxWidth);
-            const randomY = Math.max(10, Math.random() * maxHeight);
-            
+            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
             noBtn.style.position = 'fixed';
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
+            noBtn.style.left = Math.max(10, Math.random() * maxX) + 'px';
+            noBtn.style.top = Math.max(10, Math.random() * maxY) + 'px';
         }
-
         function toggleMusic() {
-            if (audio.paused) {
-                audio.play();
-                document.querySelector('.music-control').innerHTML = '🔊';
-            } else {
-                audio.pause();
-                document.querySelector('.music-control').innerHTML = '🎵';
-            }
+            if (audio.paused) { audio.play(); document.querySelector('.music-control').innerHTML = '🔊'; } 
+            else { audio.pause(); document.querySelector('.music-control').innerHTML = '🎵'; }
         }
-
         function launchConfetti() {
             for(let i=0; i<50; i++) {
                 let div = document.createElement('div');
-                div.style.position = 'fixed';
-                div.style.left = Math.random() * 100 + 'vw';
-                div.style.top = '-50px';
+                div.style.position = 'fixed'; div.style.left = Math.random() * 100 + 'vw'; div.style.top = '-50px';
                 div.style.width = '10px'; div.style.height = '10px';
                 div.style.backgroundColor = ['#ff0', '#f00', '#0f0', '#00f'][Math.floor(Math.random()*4)];
                 div.style.animation = `fall ${Math.random()*3+2}s linear forwards`;
