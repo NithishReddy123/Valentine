@@ -8,7 +8,6 @@
     <style>
         :root {
             --primary: #ff4d4d;
-            --secondary: #ff9a9e;
             --bg-color: #ffe6e6;
         }
         
@@ -22,121 +21,102 @@
             min-height: 100vh; 
             margin: 0; 
             overflow-x: hidden;
-            transition: background 0.5s;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap box on mobile */
         }
 
         /* --- STAGE 1: GIFT BOX --- */
         #gift-screen { cursor: pointer; text-align: center; }
-        .gift-box {
-            font-size: 80px;
-            animation: bounce 1.5s infinite;
-        }
-        @keyframes bounce { 
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-20px); } 
-        }
-        .tap-text {
-            margin-top: 10px; color: var(--primary); 
-            animation: pulse 1s infinite;
-        }
+        .gift-box { font-size: 80px; animation: bounce 1.5s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .tap-text { margin-top: 10px; color: var(--primary); animation: pulse 1s infinite; }
 
         /* --- STAGE 2: PROPOSAL --- */
         .container { 
-            display: none; /* Hidden initially */
+            display: none; 
             text-align: center; 
             background: rgba(255, 255, 255, 0.95); 
-            padding: 30px; 
-            border-radius: 25px; 
+            padding: 30px; border-radius: 25px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
             width: 85%; max-width: 350px; 
             position: relative; z-index: 10;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         img.main-gif { width: 100%; max-width: 200px; border-radius: 15px; }
         h1 { color: var(--primary); font-size: 1.8rem; margin: 10px 0; }
         p { color: #666; font-size: 1.1rem; }
 
-        .btn-group { margin-top: 20px; height: 50px; position: relative; }
+        .btn-group { margin-top: 20px; height: 60px; position: relative; }
+        
         button { 
             padding: 12px 25px; font-size: 1rem; border: none; 
             border-radius: 50px; cursor: pointer; font-weight: 600;
             font-family: 'Fredoka', sans-serif;
+            transition: all 0.2s;
         }
-        .yes-btn { background-color: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255,77,77,0.3); }
-        .no-btn { background-color: #fff; color: var(--primary); border: 2px solid var(--primary); position: absolute; }
+        .yes-btn { background-color: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255,77,77,0.3); z-index: 10; }
+        
+        /* Fixed No Button Logic */
+        .no-btn { 
+            background-color: #fff; color: var(--primary); 
+            border: 2px solid var(--primary); 
+            position: absolute; /* Allows movement */
+            z-index: 100; /* Stays on top */
+            left: 50%; top: 0; transform: translateX(-50%); /* Start center */
+        }
 
         /* --- STAGE 3: TIMELINE --- */
-        #timeline-screen {
-            display: none; width: 100%; max-width: 500px;
-            padding: 20px; padding-bottom: 100px;
-        }
-        .section-title {
-            text-align: center; color: var(--primary); font-size: 2rem;
-            margin-bottom: 20px;
-        }
-
-        /* Reveal Card Style */
+        #timeline-screen { display: none; width: 100%; max-width: 500px; padding: 20px; padding-bottom: 100px; }
+        .section-title { text-align: center; color: var(--primary); font-size: 2rem; margin-bottom: 20px; }
+        
         .reveal-card {
             background: white; margin-bottom: 20px; border-radius: 15px;
             overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative; transition: transform 0.2s;
+            position: relative;
         }
-        .reveal-card:active { transform: scale(0.98); }
 
         .reveal-content {
             padding: 20px; text-align: center;
-            filter: blur(15px); /* BLUR EFFECT */
-            opacity: 0.5;
-            transition: all 0.5s ease;
+            filter: blur(15px); opacity: 0.5; transition: all 0.5s ease;
         }
         .reveal-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
-            flex-direction: column;
-            background: rgba(255,40,40,0.05);
-            z-index: 5;
+            background: rgba(255,40,40,0.05); z-index: 5;
         }
         .reveal-overlay span {
-            background: var(--primary); color: white;
-            padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;
-            pointer-events: none;
+            background: var(--primary); color: white; padding: 8px 15px;
+            border-radius: 20px; font-size: 0.9rem; pointer-events: none;
         }
         
-        /* State: REVEALED */
         .reveal-card.revealed .reveal-content { filter: blur(0); opacity: 1; }
         .reveal-card.revealed .reveal-overlay { display: none; }
 
-        .card-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 10px auto; display: block; }
-
-        /* WhatsApp Button */
-        .whatsapp-btn {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background-color: #25D366; color: white;
-            padding: 15px 30px; border-radius: 50px;
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
-            text-decoration: none; font-weight: bold; z-index: 100;
-            animation: pulse 2s infinite;
+        /* IMAGES FIX */
+        .card-img { 
+            width: 120px; height: 120px; 
+            border-radius: 15px; /* Square with rounded corners looks better for posters */
+            object-fit: cover; margin: 10px auto; display: block; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* UTILS */
+        .whatsapp-btn {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: #25D366; color: white; padding: 15px 30px;
+            border-radius: 50px; display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; z-index: 100;
+        }
+
         .music-control { position: fixed; top: 15px; right: 15px; background: white; padding: 10px; border-radius: 50%; z-index: 1000; cursor: pointer; }
-        .hidden { display: none !important; }
-        .floating-emoji { position: fixed; z-index: 100; cursor: pointer; user-select: none; }
-        
-        /* Typewriter Cursor */
         .typing-cursor::after { content: '|'; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-
     </style>
 </head>
 <body>
 
     <div class="music-control" onclick="toggleMusic()">🎵</div>
+    
     <audio id="bgMusic" loop>
-        <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Jazz_Sampler/Kevin_MacLeod_-_Enthusiast.mp3" type="audio/mp3">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mp3">
     </audio>
 
     <div id="gift-screen" onclick="openGift()">
@@ -161,7 +141,7 @@
             <div class="reveal-overlay"><span>Tap to Reveal Dinner</span></div>
             <div class="reveal-content">
                 <h3>Unlimited Dinner 🥟</h3>
-                <img class="card-img" src="https://t4.ftcdn.net/jpg/02/40/07/28/360_F_240072870_MB6bY7Wz7cddb3tVf5eT0v5a7c5a7c5a.jpg">
+                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/640px-Momo_nepal.jpg">
                 <p>Only the best <b>MOMOS</b> for you!</p>
             </div>
         </div>
@@ -170,7 +150,7 @@
             <div class="reveal-overlay"><span>Tap to Reveal Movie</span></div>
             <div class="reveal-content">
                 <h3>Movie Night 🎬</h3>
-                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/9/90/Billa_2009_poster.jpg/220px-Billa_2009_poster.jpg">
+                <img class="card-img" src="https://m.media-amazon.com/images/M/MV5BNjk4OTM5YTctMTI1MC00MzM1LWFlNzctZTI2ZjY3ZTVkMGY2XkEyXkFqcGdeQXVyMTI1NDEyNTM5._V1_.jpg" style="object-position: top;">
                 <p>Watching <b>BILLA</b> together! 😎</p>
             </div>
         </div>
@@ -179,39 +159,47 @@
             <div class="reveal-overlay"><span>Tap to Reveal Song</span></div>
             <div class="reveal-content">
                 <h3>Our Song 🎶</h3>
-                <p style="font-size: 1.2rem; color: #ff4d4d;">
+                <p style="font-size: 1.2rem; color: #ff4d4d; font-weight: bold;">
                     <i>"Ninnu vidisi vundalenaya <br> kailasa vaasa"</i>
                 </p>
             </div>
         </div>
 
-        <a href="https://wa.me/?text=Yes!%20I'm%20ready%20for%20Momos%20and%20Billa!%20%F0%9F%90%92%F0%9F%92%96" class="whatsapp-btn">
+        <a href="https://wa.me/?text=Yes!%20I'm%20ready%20for%20Momos%20and%20Prabhas!%20%F0%9F%90%92%F0%9F%92%96" class="whatsapp-btn">
             Send "YES" on WhatsApp 💬
         </a>
     </div>
 
     <script>
+        const audio = document.getElementById('bgMusic');
+        
         // --- LOGIC ---
         function openGift() {
+            // AUDIO FIX: Attempt to play immediately on first interaction
+            audio.volume = 0.5; // Set volume to 50%
+            audio.play().then(() => {
+                document.querySelector('.music-control').innerHTML = '🔊';
+            }).catch(error => {
+                console.log("Audio autoplay failed:", error);
+            });
+
             document.getElementById('gift-screen').style.display = 'none';
             document.getElementById('proposal-screen').style.display = 'block';
             typeWriter();
-            toggleMusic();
         }
 
         function reveal(card) {
             card.classList.add('revealed');
-            createEmojiBurst(card);
         }
 
         function acceptProposal() {
             document.getElementById('proposal-screen').style.display = 'none';
             document.getElementById('timeline-screen').style.display = 'block';
-            document.body.style.backgroundColor = "#fff0f5"; // Lighter pink
+            document.body.style.backgroundColor = "#fff0f5"; 
             launchConfetti();
         }
 
-        // --- UTILS ---
+        // --- TYPEWRITER ---
         const text = "Will you be my Valentine, Pilla Kothi? 🐒";
         const typeWriterElement = document.getElementById('typewriter');
         let index = 0;
@@ -226,15 +214,38 @@
             }
         }
 
+        // --- FIXED NO BUTTON LOGIC ---
         const noBtn = document.getElementById('noBtn');
+        const phrases = ["Really?", "Pilla Kothi please!", "Don't be mean!", "Just click YES!", "I'll cry!", "Look at the monkey!"];
+        
         function moveButton(e) {
-            if(e && e.type === 'touchstart') e.preventDefault();
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-            noBtn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            // Prevent default behavior (zooming/scrolling on tap)
+            if(e) e.preventDefault();
+            
+            // 1. Change Text FIRST
+            const randomText = phrases[Math.floor(Math.random() * phrases.length)];
+            noBtn.innerText = randomText;
+            
+            // 2. Move Button
+            // Calculate available space
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
+            
+            // Generate random coordinates
+            const randomX = Math.max(10, Math.random() * maxWidth);
+            const randomY = Math.max(10, Math.random() * maxHeight);
+            
+            // Apply new position
+            noBtn.style.position = 'fixed'; // Ensure it breaks out of layout
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            // 3. Style Change (Optional visual feedback)
+            noBtn.style.backgroundColor = "#ffe6e6";
+            noBtn.style.borderColor = "#ff4d4d";
         }
 
-        const audio = document.getElementById('bgMusic');
+        // --- MUSIC TOGGLE ---
         function toggleMusic() {
             if (audio.paused) {
                 audio.play();
@@ -245,42 +256,21 @@
             }
         }
 
+        // --- CONFETTI ---
         function launchConfetti() {
             for(let i=0; i<50; i++) {
                 let div = document.createElement('div');
-                div.className = 'floating-emoji';
-                div.innerHTML = ['❤️','🐒','🥟','🔥'][Math.floor(Math.random()*4)];
+                div.style.position = 'fixed';
                 div.style.left = Math.random() * 100 + 'vw';
                 div.style.top = '-50px';
+                div.style.width = '10px'; div.style.height = '10px';
+                div.style.backgroundColor = ['#ff0', '#f00', '#0f0', '#00f'][Math.floor(Math.random()*4)];
                 div.style.animation = `fall ${Math.random()*3+2}s linear forwards`;
-                div.onclick = function(){ this.remove() }; // Interactive popping
                 document.body.appendChild(div);
             }
             const style = document.createElement('style');
             style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }`;
             document.head.appendChild(style);
-        }
-
-        function createEmojiBurst(element) {
-            // Mini burst when card is revealed
-            const rect = element.getBoundingClientRect();
-            for(let i=0; i<10; i++) {
-                let div = document.createElement('div');
-                div.innerText = '✨';
-                div.style.position = 'fixed';
-                div.style.left = rect.left + rect.width/2 + 'px';
-                div.style.top = rect.top + rect.height/2 + 'px';
-                div.style.fontSize = '20px';
-                div.style.pointerEvents = 'none';
-                div.style.transition = 'all 1s';
-                document.body.appendChild(div);
-                
-                setTimeout(() => {
-                    div.style.transform = `translate(${Math.random()*100-50}px, ${Math.random()*100-50}px)`;
-                    div.style.opacity = 0;
-                }, 10);
-                setTimeout(() => div.remove(), 1000);
-            }
         }
     </script>
 </body>
